@@ -1,21 +1,27 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import cn from 'classnames';
+import LoadIcon from '../icons/LoadIcon';
+import Favorite from './Favorite';
 
 interface CharacterCardProps {
   name: string;
   image: string;
   species: string;
-  href: string;
+  isFavorite?: boolean;
+  isLoading?: boolean;
+  onFavorite?: () => void;
 }
 
 export default function CharacterCard({
   name,
   image,
   species,
-  href,
+  isFavorite,
+  isLoading,
+  onFavorite,
 }: CharacterCardProps) {
   return (
-    <Link href={href} className='relative'>
+    <div className='relative'>
       <Image
         className='w-full object-contain aspect-square rounded-md'
         src={image}
@@ -28,6 +34,19 @@ export default function CharacterCard({
         {name}
       </h3>
       <p className='text-base text-gray-600'>{species}</p>
-    </Link>
+      <button
+        className={cn('absolute top-2 right-2', {
+          'pointer-events-none': isLoading,
+        })}
+        type='button'
+        onClick={onFavorite}
+      >
+        {isLoading ? (
+          <LoadIcon className='w-6 h-6 animate-spin text-gray-500' />
+        ) : (
+          <Favorite isFavorite={isFavorite || false} />
+        )}
+      </button>
+    </div>
   );
 }
