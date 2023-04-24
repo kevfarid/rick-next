@@ -4,6 +4,7 @@ import ButtonPagination from './ButtonPagination';
 
 interface PaginationProps {
   count: number;
+  initialPage?: number;
   handlePage: (page: number) => void;
   disabled?: boolean;
 }
@@ -16,18 +17,21 @@ export default function Pagination({
   count,
   handlePage,
   disabled,
+  initialPage = 1,
 }: PaginationProps) {
   const [showPages, setShowPages] = useState<number[]>([]);
   const [totalPages, setTotalPages] = useState<number[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(initialPage);
 
   useEffect(() => {
+    if (initialPage === 1) setPage(initialPage);
+
     const totalPages = getTotalPage(count);
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     setTotalPages(pages);
     setShowPages(totalPages <= 5 ? pages : pages.slice(0, 5));
-  }, [count]);
+  }, [count, initialPage]);
 
   const handleNext = () => {
     if (page === totalPages.length) return;
@@ -59,9 +63,12 @@ export default function Pagination({
 
   return (
     <nav
-      className={cn('isolate inline-flex -space-x-px rounded-md shadow-sm max-w-max', {
-        'opacity-50 pointer-events-none': disabled,
-      })}
+      className={cn(
+        'isolate inline-flex -space-x-px rounded-md shadow-sm max-w-max',
+        {
+          'opacity-50 pointer-events-none': disabled,
+        }
+      )}
       aria-label='Pagination'
     >
       <ButtonPagination

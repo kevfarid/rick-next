@@ -15,7 +15,7 @@ export default function CharacterCard({
   href,
 }: CharacterCardProps) {
   return (
-    <Link href={href}>
+    <Link href={href} className='relative'>
       <Image
         className='w-full object-contain aspect-square rounded-md'
         src={image}
