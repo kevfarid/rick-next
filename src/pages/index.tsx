@@ -1,39 +1,57 @@
-import { URL_API_RICK } from '@/constants';
-import useFetch from '@/hooks/useFetch';
+import CharacterCard from '@/components/Characters/Card';
+import Pagination from '@/components/Pagination';
 import useNewUser from '@/hooks/useNewUser';
 import CharacterInfo from '@/interfaces/Character';
 import Responses from '@/interfaces/Responses';
+import { getCharacters } from '@/services/characters';
 import { Inter } from 'next/font/google';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   useNewUser();
 
-  const { data } = useFetch<Responses<CharacterInfo>>(
-    `${URL_API_RICK}/api/character`
-  );
+  const [page, setPage] = useState<number>(1);
+  const [results, setResults] = useState<CharacterInfo[]>();
+  const [info, setInfo] = useState<Responses['info']>();
+  const [isLoading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getCharacters(page)
+      .then((response) => {
+        setResults(response.results);
+        setInfo(response.info);
+      })
+      .finally(() => setLoading(false));
+  }, [page]);
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`px-24 ${inter.className} flex flex-col w-full items-center gap-8`}
     >
       <h1 className='text-6xl font-bold'>Rick and Morty</h1>
 
-      <ul className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 w-full'>
-        {data?.results?.map((character) => (
-          <li key={character.id}>
-            <Image
-              src={character.image}
-              alt={character.name}
-              width={200}
-              height={200}
+      <ul className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-5 w-full'>
+        {results?.map((character) => (
+          <li
+            key={character.id}
+            className='cursor-pointer hover:scale-105 transition-all duration-100'
+          >
+            <CharacterCard
+              {...character}
+              href={`/characters/${character.id}`}
             />
-            <h2>{character.name}</h2>
           </li>
         ))}
       </ul>
+
+      <Pagination
+        count={info?.count || 0}
+        handlePage={setPage}
+        disabled={isLoading}
+      />
     </main>
   );
 }
