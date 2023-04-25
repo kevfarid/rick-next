@@ -1,7 +1,7 @@
 import { LIMIT_FAVORITES } from '@/constants';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import CharacterInfo from '@/interfaces/Character';
-import { setFavorite, getFavorites } from '@/services/favorites';
+import { uploadFavorites, getFavorites } from '@/services/favorites';
 import { ReactNode, createContext, use, useEffect, useState } from 'react';
 
 interface FavoritesContextData {

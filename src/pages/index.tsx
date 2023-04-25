@@ -47,7 +47,7 @@ export default function Home() {
           />
         }
       />
-      <div className='flex flex-col items-center w-full gap-4 relative'>
+      <div className='flex flex-col items-center w-full gap-4 relative max-w-7xl xl:mx-auto'>
         {error && (
           <div className='bg-red-300 text-red-800 py-3 px-6 rounded-md w-full sticky top-2 z-30'>
             <p className='text-sm font-semibold'>{error}</p>

@@ -1,4 +1,4 @@
-export function setFavorite(id: string, favorite: number) {
+export function uploadFavorites(id: string, favorites: number[]) {
   return fetch('/api/favorites', {
     method: 'PUT',
     headers: {
@@ -6,7 +6,7 @@ export function setFavorite(id: string, favorite: number) {
     },
     body: JSON.stringify({
       id,
-      favorite,
+      favorites,
     }),
   })
     .then((response) => response.json())

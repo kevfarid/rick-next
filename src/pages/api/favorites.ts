@@ -20,27 +20,12 @@ export default async function handler(
 
   if (req.method === 'PUT') {
     try {
-      const favorite = Number(req.body.favorite);
-
-      const existFavorite = user?.favorites.find((item) => item === favorite);
-
-      let favorites = [];
-
-      if (existFavorite) {
-        favorites = user?.favorites.filter((item) => item !== favorite) || [];
-      } else {
-        if (user!.favorites.length >= 5) {
-          throw new Error('You can only add 5 favorites');
-        }
-        favorites = user?.favorites.concat(favorite) || [];
-      }
-
       const userUpdated = await prisma.user.update({
         where: {
           id: req.body.id,
         },
         data: {
-          favorites,
+          favorites: req.body.favorites,
         },
       });
 
