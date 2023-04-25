@@ -17,9 +17,9 @@ export default function Hero({ element }: HeroProps) {
         alt='Rick and Morty'
         width={400}
         height={120}
-        className='z-30'
+        className='z-30 px-4'
       />
-      <div className='w-full absolute bottom-4 flex justify-center text-white'>
+      <div className='w-full absolute bottom-4 flex justify-center text-white px-4'>
         {element}
       </div>
     </section>
