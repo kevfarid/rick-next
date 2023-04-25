@@ -13,7 +13,7 @@ export default function Header() {
           href='/'
           className='justify-center flex items-center gap-2 hover:opacity-80'
         >
-          <Image src='/logo.svg' alt='Rick and Morty' width={40} height={100} />
+          <Image src='/logo.svg' alt='Rick and Morty' width={40} height={40} />
           Rick and Morty
         </Link>
       </h1>

@@ -18,9 +18,3 @@ export function uploadFavorites(id: string, favorites: number[]) {
       }
     });
 }
-
-export function getFavorites(id: string) {
-  return fetch(`/api/favorites?id=${id}`)
-    .then((response) => response.json())
-    .then((data) => data.favorites);
-}

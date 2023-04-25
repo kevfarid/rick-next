@@ -3,6 +3,7 @@ import CharacterCard from './Card';
 
 import cn from 'classnames';
 import LoadIcon from '../icons/LoadIcon';
+import { Suspense } from 'react';
 
 interface ListProps {
   characters: CharacterInfo[];
@@ -39,15 +40,16 @@ export default function CharactersList({
             />
           </li>
         ))}
+
+      {characters?.length === 0 && !isLoading && (
+        <div className='flex justify-center items-center h-20'>
+          <div className='text-gray-500'>No characters found</div>
+        </div>
+      )}
       <li className='col-span-full'>
         {isLoading && (
           <div className='flex justify-center items-center h-20'>
             <LoadIcon className='w-6 h-6 animate-spin text-gray-500' />
-          </div>
-        )}
-        {characters?.length === 0 && !isLoading && (
-          <div className='flex justify-center items-center h-20'>
-            <div className='text-gray-500'>No characters found</div>
           </div>
         )}
       </li>

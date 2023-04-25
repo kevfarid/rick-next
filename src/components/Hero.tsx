@@ -16,7 +16,7 @@ export default function Hero({ element }: HeroProps) {
         src='/rick.png'
         alt='Rick and Morty'
         width={400}
-        height={300}
+        height={120}
         className='z-30'
       />
       <div className='w-full absolute bottom-4 flex justify-center text-white'>

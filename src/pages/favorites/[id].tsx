@@ -5,10 +5,11 @@ import { getMultipleCharacters } from '@/services/characters';
 import CharactersList from '@/components/Characters/List';
 
 import { PrismaClient } from '@prisma/client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useFavorites from '@/hooks/useFavorites';
 import Hero from '@/components/Hero';
 import Link from 'next/link';
+import LoadIcon from '@/components/icons/LoadIcon';
 interface FavoritesProps {
   id: string;
   favoritesIds: number[];
@@ -19,17 +20,21 @@ export default function Favorite({ favoritesIds }: FavoritesProps) {
 
   const [characters, setCharacters] = useState<CharacterInfo[]>([]);
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     if (favoritesIds.length > 0) {
-      getMultipleCharacters(favoritesIds).then((response) => {
-        setCharacters(response), setIsLoading(false);
+      await getMultipleCharacters(favoritesIds).then((response) => {
+        setCharacters(response);
+        setIsLoading(false);
       });
     } else {
       setCharacters([]);
     }
-    setIsLoading(false);
   }, [favoritesIds]);
+
+  useEffect(() => {
+    fetchData();
+  }, [favoritesIds, fetchData]);
 
   return (
     <>
@@ -45,7 +50,7 @@ export default function Favorite({ favoritesIds }: FavoritesProps) {
         href='/'
         className='ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
       >
-        Create your our list
+        Create your list
       </Link>
     </>
   );
