@@ -13,3 +13,15 @@ export function getCharacters(
     .then((response) => response.json())
     .then((data) => data);
 }
+
+export function getMultipleCharacters(ids: number[]): Promise<CharacterInfo[]> {
+  if (ids.length === 0) {
+    return Promise.resolve([]);
+  }
+
+  return fetch(`${URL_API_RICK}/api/character/${ids}`)
+    .then((response) => response.json())
+    .then((data) => {
+      return Array.isArray(data) ? data : [data];
+    });
+}

@@ -1,50 +1,52 @@
 import { LIMIT_FAVORITES } from '@/constants';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import CharacterInfo from '@/interfaces/Character';
 import { setFavorite, getFavorites } from '@/services/favorites';
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, use, useEffect, useState } from 'react';
 
 interface FavoritesContextData {
-  favorites: number[];
-  isLoading: boolean;
-  toggleFavorite: (id: number) => void;
+  favorites: CharacterInfo[];
+  toggleFavorite: (character: CharacterInfo) => void;
   error?: string;
 }
 
 export const FavoritesContext = createContext<FavoritesContextData>({
   favorites: [],
-  isLoading: false,
   toggleFavorite: () => {},
   error: '',
 });
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [favorites, setFavorites] = useState<CharacterInfo[]>([]);
+  const [storedFavorites, setStoredFavorites] = useLocalStorage<
+    CharacterInfo[]
+  >('favorites', []);
   const [error, setError] = useState<string>('');
-  const [idUser] = useLocalStorage('rickandmorty-user');
 
-  const toggleFavorite = (id: number) => {
-    setLoading(true);
+  const toggleFavorite = (character: CharacterInfo) => {
+    const isFavorite = favorites.find((fav) => fav.id === character.id);
+    const filter = (fav: CharacterInfo) => fav.id !== character.id;
 
-    setFavorite(idUser, id)
-      .then((data) => {
-        if (data) {
-          setFavorites(data);
-        }
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
+    if (isFavorite) {
+      setFavorites(favorites.filter(filter));
+      setStoredFavorites(storedFavorites.filter(filter));
+      return;
+    }
+
+    if (favorites.length >= LIMIT_FAVORITES) {
+      setError('You have reached the limit of favorites');
+      return;
+    }
+
+    setStoredFavorites((prev: CharacterInfo[]) => prev.concat(character));
+    setFavorites((prev) => prev.concat(character));
   };
 
   useEffect(() => {
-    if (idUser) {
-      getFavorites(idUser).then((data) => {
-        setFavorites(data);
-      });
-    }
-  }, [idUser]);
+    if (storedFavorites.length === 0) return;
+
+    setFavorites(storedFavorites);
+  }, [storedFavorites]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,7 +59,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const values = {
     favorites,
     toggleFavorite,
-    isLoading,
     error,
   };
 

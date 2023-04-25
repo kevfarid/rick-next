@@ -8,8 +8,8 @@ interface CharacterCardProps {
   image: string;
   species: string;
   isFavorite?: boolean;
-  isLoading?: boolean;
   onFavorite?: () => void;
+  showFavorite?: boolean;
 }
 
 export default function CharacterCard({
@@ -17,8 +17,8 @@ export default function CharacterCard({
   image,
   species,
   isFavorite,
-  isLoading,
   onFavorite,
+  showFavorite = true,
 }: CharacterCardProps) {
   return (
     <div className='relative'>
@@ -34,19 +34,15 @@ export default function CharacterCard({
         {name}
       </h3>
       <p className='text-base text-gray-600'>{species}</p>
-      <button
-        className={cn('absolute top-2 right-2', {
-          'pointer-events-none': isLoading,
-        })}
-        type='button'
-        onClick={onFavorite}
-      >
-        {isLoading ? (
-          <LoadIcon className='w-6 h-6 animate-spin text-gray-500' />
-        ) : (
+      {showFavorite && (
+        <button
+          className={cn('absolute top-2 right-2')}
+          type='button'
+          onClick={onFavorite}
+        >
           <Favorite isFavorite={isFavorite || false} />
-        )}
-      </button>
+        </button>
+      )}
     </div>
   );
 }
