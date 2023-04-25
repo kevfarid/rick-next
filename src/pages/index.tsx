@@ -63,7 +63,6 @@ export default function Home() {
           count={info?.count || 0}
           handlePage={setPage}
           disabled={isLoading}
-          initialPage={page}
         />
       </div>
     </>

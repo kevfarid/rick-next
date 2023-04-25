@@ -17,21 +17,18 @@ export default function Pagination({
   count,
   handlePage,
   disabled,
-  initialPage = 1,
 }: PaginationProps) {
   const [showPages, setShowPages] = useState<number[]>([]);
   const [totalPages, setTotalPages] = useState<number[]>([]);
-  const [page, setPage] = useState<number>(initialPage);
+  const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
-    if (initialPage === 1) setPage(initialPage);
-
     const totalPages = getTotalPage(count);
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     setTotalPages(pages);
     setShowPages(totalPages <= 5 ? pages : pages.slice(0, 5));
-  }, [count, initialPage]);
+  }, [count]);
 
   const handleNext = () => {
     if (page === totalPages.length) return;
