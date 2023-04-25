@@ -22,7 +22,7 @@ export default function CharactersList({
   return (
     <ul
       className={cn(
-        'grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-5 w-full'
+        'grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-5 w-full px-8'
       )}
     >
       {!isLoading &&

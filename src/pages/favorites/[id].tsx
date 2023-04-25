@@ -7,6 +7,8 @@ import CharactersList from '@/components/Characters/List';
 import { PrismaClient } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import useFavorites from '@/hooks/useFavorites';
+import Hero from '@/components/Hero';
+import Link from 'next/link';
 interface FavoritesProps {
   id: string;
   favoritesIds: number[];
@@ -31,14 +33,20 @@ export default function Favorite({ favoritesIds }: FavoritesProps) {
 
   return (
     <>
-      <h1 className='text-6xl font-bold'>Rick and Morty</h1>
+      <Hero />
       <h2 className='text-4xl font-bold'>Favorites</h2>
       <CharactersList
         characters={characters}
         showFavorite={false}
-        favorites={favoritesIds}
+        favorites={characters}
         isLoading={isLoading}
       />
+      <Link
+        href='/'
+        className='ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+      >
+        Create your our list
+      </Link>
     </>
   );
 }

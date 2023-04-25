@@ -36,7 +36,9 @@ export default function CharacterCard({
       <p className='text-base text-gray-600'>{species}</p>
       {showFavorite && (
         <button
-          className={cn('absolute top-2 right-2')}
+          className={cn(
+            'absolute top-2 right-2 bg-white rounded-full p-2 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300'
+          )}
           type='button'
           onClick={onFavorite}
         >
