@@ -39,39 +39,32 @@ export default function Favorite({ favoritesIds }: FavoritesProps) {
   return (
     <>
       <Hero />
-      <h2 className='text-4xl font-bold'>Favorites</h2>
-      <CharactersList
-        characters={characters}
-        showFavorite={false}
-        favorites={characters}
-        isLoading={isLoading}
-      />
-      <Link
-        href='/'
-        className='ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
-      >
-        Create your list
-      </Link>
+      <div className='mx-auto w-full flex flex-col items-center gap-8 max-w-7xl'>
+        <h2 className='text-4xl font-bold'>Favorites</h2>
+        <CharactersList
+          characters={characters}
+          showFavorite={false}
+          favorites={characters}
+          isLoading={isLoading}
+        />
+        <Link
+          href='/'
+          className='ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+        >
+          Create your list
+        </Link>
+      </div>
     </>
   );
 }
 
 export async function getStaticPaths() {
-  if (process.env.SKIP_BUILD_STATIC_GENERATION) {
-    return {
-      paths: [],
-      fallback: 'blocking',
-    };
-  }
-
   const prisma = new PrismaClient();
 
   const user = await prisma.user.findMany();
   const paths = user.map((favorite) => ({
     params: { id: favorite.id.toString() },
   }));
-
-  prisma.$disconnect();
 
   return {
     paths,
@@ -87,8 +80,6 @@ export async function getStaticProps({ params }: { params: FavoritesProps }) {
       id: params.id,
     },
   });
-
-  prisma.$disconnect();
 
   return {
     props: {
