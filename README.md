@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+### Pre Configuration
+
+- Create a `.env` file in the root of the project
+- Paste the url of your prisma server in the `.env` file as `DATABASE_URL`
+- run `npx prisma generate` to generate the prisma client
+
 First, run the development server:
 
 ```bash
