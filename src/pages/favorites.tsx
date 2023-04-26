@@ -11,6 +11,8 @@ import useClipboard from '@/hooks/useClipboard';
 import UploadIcon from '@/components/icons/UploadIcon';
 import { uploadFavorites } from '@/services/favorites';
 
+const PATH_URL = 'shared?id=';
+
 export default function Favorites() {
   const { favorites, toggleFavorite } = useFavorites();
   const { copyToClipboard, isCopied } = useClipboard();
@@ -29,13 +31,12 @@ export default function Favorites() {
     createNewUser(favoritesIds)
       .then((id) => {
         setIdUser(id);
-        copyToClipboard(`${urlPublic}/favorites/${id}`);
       })
       .catch((error) => setError(error.message))
       .finally(() => {
         setIsLoading(false);
       });
-  }, [copyToClipboard, favorites, setIdUser, urlPublic]);
+  }, [favorites, setIdUser]);
 
   const uploadFavorite = useCallback(() => {
     setIsLoadingUpload(true);
@@ -51,7 +52,7 @@ export default function Favorites() {
     if (!idUser) {
       createUser();
     } else {
-      copyToClipboard(`${urlPublic}/favorites/${id}`);
+      copyToClipboard(`${urlPublic}/${PATH_URL}${id}`);
     }
   };
 
@@ -84,7 +85,7 @@ export default function Favorites() {
               <>
                 <div className='py-2 px-4 bg-slate-200 max-h-80 rounded max-w-sm flex gap-2 items-center'>
                   <span className='text-slate-500 text-ellipsis whitespace-nowrap overflow-hidden w-52'>
-                    {urlPublic}/favorites/{id}
+                    {`${urlPublic}/${PATH_URL}${id}`}
                   </span>
                   <button
                     onClick={haddleShare}

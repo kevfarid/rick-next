@@ -18,3 +18,15 @@ export function uploadFavorites(id: string, favorites: number[]) {
       }
     });
 }
+
+export function getFavoritesIds(id: string) {
+  return fetch(`/api/favorites?id=${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        throw new Error(data.error);
+      } else {
+        return data.favorites;
+      }
+    });
+}

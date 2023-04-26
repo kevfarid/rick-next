@@ -1,27 +1,28 @@
-import CharacterCard from '@/components/Characters/Card';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import CharacterInfo from '@/interfaces/Character';
 import { getMultipleCharacters } from '@/services/characters';
 import CharactersList from '@/components/Characters/List';
+import { getFavoritesIds } from '@/services/favorites';
 
-import { PrismaClient } from '@prisma/client';
 import { useCallback, useEffect, useState } from 'react';
-import useFavorites from '@/hooks/useFavorites';
 import Hero from '@/components/Hero';
 import Link from 'next/link';
-import LoadIcon from '@/components/icons/LoadIcon';
-interface FavoritesProps {
-  id: string;
-  favoritesIds: number[];
-}
+import { useRouter } from 'next/router';
 
-export default function Favorite({ favoritesIds }: FavoritesProps) {
+export default function Favorite() {
   const [isLoading, setIsLoading] = useState(true);
-
+  const [favoritesIds, setFavoritesIds] = useState<number[]>([]);
   const [characters, setCharacters] = useState<CharacterInfo[]>([]);
+
+  const { query } = useRouter();
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
+
+    if (!favoritesIds) {
+      setIsLoading(false);
+      return;
+    }
+
     if (favoritesIds.length > 0) {
       await getMultipleCharacters(favoritesIds).then((response) => {
         setCharacters(response);
@@ -32,9 +33,23 @@ export default function Favorite({ favoritesIds }: FavoritesProps) {
     }
   }, [favoritesIds]);
 
+  const getFavorites = useCallback(() => {
+    const { id } = query;
+    if (id) {
+      getFavoritesIds(id as string).then((response) => {
+        console.log(response);
+        setFavoritesIds(response);
+      });
+    }
+  }, [query]);
+
+  useEffect(() => {
+    getFavorites();
+  }, [getFavorites]);
+
   useEffect(() => {
     fetchData();
-  }, [favoritesIds, fetchData]);
+  }, [fetchData, favoritesIds]);
 
   return (
     <>
@@ -58,33 +73,34 @@ export default function Favorite({ favoritesIds }: FavoritesProps) {
   );
 }
 
-export async function getStaticPaths() {
-  const prisma = new PrismaClient();
+// export async function getStaticPaths() {
+//   const prisma = new PrismaClient();
 
-  const user = await prisma.user.findMany();
-  const paths = user.map((favorite) => ({
-    params: { id: favorite.id.toString() },
-  }));
+//   const user = await prisma.user.findMany();
+//   const paths = user.map((favorite) => ({
+//     params: { id: favorite.id.toString() },
+//   }));
 
-  return {
-    paths,
-    fallback: false,
-  };
-}
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// }
 
-export async function getStaticProps({ params }: { params: FavoritesProps }) {
-  const prisma = new PrismaClient();
+// export async function getStaticProps(context: GetStaticPropsContext) {
+//   cons
+//   const prisma = new PrismaClient();
 
-  const userFind = await prisma.user.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+//   const userFind = await prisma.user.findUnique({
+//     where: {
+//       id: params.id,
+//     },
+//   });
 
-  return {
-    props: {
-      id: params.id,
-      favoritesIds: userFind!.favorites || [],
-    },
-  };
-}
+//   return {
+//     props: {
+//       id: params.id,
+//       favoritesIds: userFind!.favorites || [],
+//     },
+//   };
+// }
